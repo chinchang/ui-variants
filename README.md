@@ -1,6 +1,6 @@
 # ui-variants
 
-A Claude Code skill that takes **any section of a website** and, in one shot, generates **3 alternate UI designs** for it, injects a **dev-only floating toggle**, and wires it up so you can cycle `Original → Variant A → Variant B → Variant C` **live in the browser** — no rebuild, no manual swap.
+A skill that takes **any section of a website** and, in one shot, generates **3 alternate UI designs** for it, injects a **dev-only floating toggle**, and wires it up so you can cycle `Original → Variant A → Variant B → Variant C` **live in the browser** — no rebuild, no manual swap.
 
 Built to help you A/B/C/D-compare real designs side-by-side before committing to one.
 
@@ -28,21 +28,19 @@ To install from a local clone:
 npx skills add ./path/to/ui-master -g
 ```
 
-Installed location (Claude Code):
-- Global: `~/.claude/skills/ui-variants/`
-- Project: `./.claude/skills/ui-variants/`
+The `skills` CLI installs into the agent-specific skills directory (for example `~/.claude/skills/ui-variants/`, `~/.cursor/skills/ui-variants/`, etc., or the project-scoped equivalent). Use `-a <agent>` to target a specific agent and `-g` for global scope.
 
 ---
 
 ## Usage
 
-Once installed, invoke in Claude Code by name or via slash command:
+Once installed, invoke the skill by name or via slash command (syntax varies by agent):
 
 ```
 /ui-variants try 3 versions of the hero section
 ```
 
-Or just describe what you want:
+Or just describe what you want in plain language:
 
 > give me 3 UI variants of the testimonial
 > A/B the pricing block
@@ -62,7 +60,25 @@ The skill will:
 
 ## What makes the variants non-generic
 
-The skill is opinionated about avoiding "AI-looking" output. Every variant must clear this checklist (from `references/design-principles.md`):
+The skill is opinionated about producing **award-site-level work** — the kind of output you'd see on design-awards sites, not yet-another-SaaS-landing. Two layers of guardrails keep variants out of the "polished but safe" zone:
+
+### Layer 1 — Boldness Quota (the "crazy" requirement)
+
+Every variant MUST include **≥3 signature moves** drawn from different categories (composition, typography, motion, texture, interaction). See `skills/ui-variants/references/signature-moves.md` for the full catalog. Examples:
+
+- Extreme scale contrast (240px headline next to 11px tabular labels)
+- Breaking the grid — diagonal composition, radical asymmetry, content rotated
+- Oversized ornament — giant numerals, single punctuation mark at 40vw
+- Novelty display fonts — Honk, Fraunces, Unbounded, Bungee, Climate Crisis
+- Text scramble / magnetic cursor / scroll-pinned reveal
+- Acid accent color — saturated lime, electric blue, hot magenta
+- Ticker marquees, coordinate displays, duotone imagery, custom cursors
+
+**And across the three variants**, the set MUST collectively include: one dark variant, one typography-led variant, one motion-heavy variant, at least one saturated accent, and three different font pairings.
+
+### Layer 2 — Anti-AI-slop checklist (the "don't be generic" floor)
+
+Every variant must also clear this polish + accessibility checklist (from `references/design-principles.md`):
 
 - ❌ No pure `#000` on pure `#fff`
 - ❌ No untinted `#888` / `#ccc` grays — colored grays only
@@ -72,6 +88,7 @@ The skill is opinionated about avoiding "AI-looking" output. Every variant must 
 - ❌ No identical drop-shadow across every card
 - ❌ No linearly-spaced 8/16/24/32 — non-linear scale required
 - ❌ No hierarchy by size alone — weight + color carry the load
+- ❌ No Inter / Roboto / system-ui as the sole font
 
 10 iconic rules are baked into the workflow:
 
@@ -114,7 +131,8 @@ Drop-in templates live in `skills/ui-variants/references/toggle-ui.md`.
 │   └── ui-variants/
 │       ├── SKILL.md                      # the skill entrypoint
 │       └── references/
-│           ├── design-principles.md      # design rules and anti-AI-slop checklist
+│           ├── design-principles.md      # polish + accessibility baseline
+│           ├── signature-moves.md        # Boldness Quota + curated font library
 │           ├── toggle-ui.md              # per-framework switcher templates
 │           └── variant-playbook.md       # aesthetic archetypes + role-specific starts
 ├── index.html                            # demo site (vanilla HTML) you can try the skill on

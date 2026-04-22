@@ -42,17 +42,22 @@ Use `AskUserQuestion` to collect these concisely when multiple are missing.
 
 ### Step 2 — Pick 3 distinct aesthetic directions
 
-**Load both references before choosing:**
+**Load all three references before choosing:**
 - `references/variant-playbook.md` — aesthetic archetypes and role-specific starting points
-- `references/design-principles.md` — design rules (hierarchy, color, typography, depth, accessibility) and the **anti-AI-slop checklist**
+- `references/design-principles.md` — baseline polish + accessibility rules; the **anti-AI-slop checklist**
+- `references/signature-moves.md` — **the Boldness Quota.** Concrete award-site-level signature moves, required per variant, plus a curated font library and set-level diversity requirements
+
+The goal is output that looks like a professional, daring designer made it — the kind of work that wins at design awards shows. Polished-but-safe is the failure mode. Commit to unusual moves.
 
 Core rules:
 
 - The three directions must be **meaningfully different from each other AND from the original**, not three flavors of the same idea.
-- Vary on **polish axes** as well as aesthetic axes: one variant should lead with depth (layered shadows, overlap), one with typographic restraint, one with color commitment. See the "Variant-selection tactics" section of `design-principles.md`.
-- Suggested aesthetic spread: one bold/maximalist, one restrained/editorial, one unexpected/genre-breaking — adapt to the section's role and any brand guardrails.
+- **Every variant must clear the Boldness Quota from `signature-moves.md`** (≥3 signature moves per variant, drawn from different categories, with at least one composition move and one typography move).
+- **The set of three collectively must include**: one dark variant, one typography-led variant, one motion-heavy variant, at least one saturated/acid accent, and three different font pairings. See the set-level checklist in `signature-moves.md`.
+- Vary on **polish axes** too: one variant leads with depth (layered shadows, overlap), one with typographic restraint, one with color commitment.
+- Pick **characterful fonts** from the curated list in `signature-moves.md`. Inter / Roboto / system-ui as the only font is forbidden — it's the #1 AI tell.
 - Apply the core design rules: colored grays (never pure `#888`), dark-gray on off-white (never `#000` on `#fff`), offset multi-layer shadows (never symmetric glows), hierarchy through weight + color (not just size), hue-rotate-to-brighten, non-linear spacing scales.
-- **Name each direction explicitly** (e.g., "Brutalist Grid", "Editorial Serif", "Neo-Retro Terminal"). These names become the toggle tooltips.
+- **Name each direction explicitly** with words that convey the boldness (e.g., "Acid Editorial", "Kinetic Marquee", "Midnight Lookbook"). Avoid generic names like "Modern Clean" or "Variant A".
 
 ### Step 3 — Generate the 3 variant implementations
 
@@ -68,8 +73,10 @@ Each variant must:
 - Preserve all content, links, form `action`s, button handlers, and interactive behavior of the original (unless restructure was opted into)
 - Match the project's framework and styling conventions
 - Be self-contained: styles scoped, no global side effects, safe to mount/unmount repeatedly
-- **Obey `references/design-principles.md`.** As you write the CSS, run through the anti-AI-slop checklist in your head. Specifically: tint grays toward brand temperature, offset multi-layer shadows (no symmetric glows), no `#000`-on-`#fff`, left-align paragraphs, non-linear spacing scale, hierarchy by weight + color rather than just size.
-- Meet **WCAG contrast** (4.5:1 body, 3:1 large text), preserve visible focus rings, use semantic HTML, and respect `prefers-reduced-motion` for any added animation.
+- **Hit the Boldness Quota** from `references/signature-moves.md` — ≥3 signature moves per variant, including ≥1 composition move and ≥1 typography move. Use a characterful font (not Inter/Roboto/system-ui alone). Commit to the unusual moves; don't dilute them.
+- **Obey `references/design-principles.md`.** As you write the CSS, run the anti-AI-slop checklist: tint grays toward brand temperature, offset multi-layer shadows (no symmetric glows), no `#000`-on-`#fff`, left-align paragraphs, non-linear spacing scale, hierarchy by weight + color rather than just size.
+- Meet **WCAG contrast** (4.5:1 body, 3:1 large text), preserve visible focus rings, use semantic HTML, and respect `prefers-reduced-motion` for any added animation. Boldness does not override accessibility — motion-heavy variants MUST have a reduced-motion fallback that still looks intentional.
+- Load any external fonts via `@import` or `<link>` at the top of the variant's CSS/JSX. Prefer Google Fonts for commercial-safe drop-ins; note the license if using a premium foundry.
 
 **Do not modify the original** — it must remain byte-identical so "Original" in the toggle really is the original.
 
@@ -105,7 +112,12 @@ Pull the exact CSS/JS from `references/toggle-ui.md`.
 
 ### Step 6 — Verify live
 
-First run the **Pre-ship checklist** from `references/design-principles.md` against each of the 3 variants. Iterate on any that fail before opening the browser.
+Before opening the browser, run **both** pre-flight checklists against every variant and iterate on anything that fails:
+
+- **Boldness checklist** from `references/signature-moves.md` — count signature moves per variant, verify set-level diversity (dark / typography-led / motion-heavy / acid accent / three font pairings).
+- **Pre-ship checklist** from `references/design-principles.md` — polish + accessibility.
+
+If a variant passes polish but fails boldness, it's a "safe" variant — rework it with a stronger signature move from category 1, 2, or 3.
 
 Then verify live:
 
@@ -145,6 +157,6 @@ Tell the user:
 - **Never ship the switcher to production users.** The dev gate is mandatory, not optional.
 - **Variants must not break page layout around them.** Test scroll, sticky siblings, and responsive breakpoints after injection.
 - **Do not invent new content.** Keep headings, copy, and CTAs intact unless the user opted into restructure.
-- **Design bar is non-negotiable.** Every variant must clear the anti-AI-slop checklist and pre-ship checklist in `references/design-principles.md`. Variants that look like generic AI output (pure black/white, untinted grays, symmetric glow shadows, purple-pink gradients, centered paragraphs) are failures, not design choices.
+- **Design bar is non-negotiable.** Every variant must clear (a) the Boldness Quota in `references/signature-moves.md` AND (b) the anti-AI-slop + pre-ship checklists in `references/design-principles.md`. Variants that look like generic AI output (pure black/white, untinted grays, symmetric glow shadows, purple-pink gradients, centered paragraphs) are failures. Variants that are polished-but-safe (technically correct, zero signature moves, convergent defaults) are ALSO failures. The skill exists to produce award-quality design exploration, not more safe variants.
 - **Accessibility is non-negotiable.** WCAG contrast, visible focus rings, semantic HTML, `prefers-reduced-motion` — apply on every variant.
 - **Prefer the references.** Don't reinvent the toggle — pull from `references/toggle-ui.md` verbatim and adjust only the integration glue.
