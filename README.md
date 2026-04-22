@@ -14,18 +14,16 @@ Using the [`skills` CLI](https://www.npmjs.com/package/skills):
 
 ```bash
 # Global (available in every project)
-npx skills add chinchang/ui-master -g
+npx skills add chinchang/ui-variants -g
 
 # Or just this project
-npx skills add chinchang/ui-master
+npx skills add chinchang/ui-variants
 ```
-
-> Replace `chinchang/ui-master` with the actual `<owner>/<repo>` path once pushed to GitHub.
 
 To install from a local clone:
 
 ```bash
-npx skills add ./path/to/ui-master -g
+npx skills add ./path/to/ui-variants -g
 ```
 
 The `skills` CLI installs into the agent-specific skills directory (for example `~/.claude/skills/ui-variants/`, `~/.cursor/skills/ui-variants/`, etc., or the project-scoped equivalent). Use `-a <agent>` to target a specific agent and `-g` for global scope.
