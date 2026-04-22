@@ -9,20 +9,36 @@
   const sections = document.querySelectorAll('[data-uiv-section]');
   if (!sections.length) return;
 
+  // URL helpers. Each section's selection is stored as ?<section-id>=<key>.
+  // history.replaceState avoids polluting history on every click.
+  const readFromURL = id => new URLSearchParams(location.search).get(id);
+  const writeToURL = (id, key) => {
+    const url = new URL(location.href);
+    if (key === 'original') url.searchParams.delete(id);
+    else url.searchParams.set(id, key);
+    history.replaceState(null, '', url.toString());
+  };
+
+  // Shared registry so global key handlers can address any section by id.
+  const ctxById = {};
+  let activeId = null;
+
   sections.forEach((section, stackIndex) => {
     const id = section.dataset.uivSection;
-    let names = { a: 'A', b: 'B', c: 'C' };
-    try { names = Object.assign(names, JSON.parse(section.dataset.uivNames || '{}')); } catch {}
+    let names = {};
+    try { names = JSON.parse(section.dataset.uivNames || '{}'); } catch {}
 
     const storageKey = `ui-variant:${id}`;
     const dismissKey = `ui-variant-dismissed:${id}`;
 
     const originalHTML = section.innerHTML;
     const variants = { original: { html: originalHTML, variant: null } };
+    const order = ['original'];
 
     document.querySelectorAll(`template[data-uiv-for="${id}"]`).forEach(t => {
       const key = t.dataset.uivVariant;
       variants[key] = { html: t.innerHTML, variant: key };
+      if (!order.includes(key)) order.push(key);
     });
 
     const apply = key => {
@@ -34,28 +50,44 @@
         delete section.dataset.variant;
       }
       try { localStorage.setItem(storageKey, key); } catch {}
+      writeToURL(id, key);
       chip.querySelectorAll('[data-uiv-seg]').forEach(el => {
         el.setAttribute('aria-checked', el.dataset.uivSeg === key ? 'true' : 'false');
       });
+      ctx.currentKey = key;
     };
 
     const chip = document.createElement('div');
     chip.className = 'uiv-chip';
+    chip.dataset.uivChipFor = id;
     chip.setAttribute('role', 'radiogroup');
     chip.setAttribute('aria-label', `${id} variant switcher`);
     chip.style.bottom = `${16 + stackIndex * 48}px`;
+
+    const segButton = (key, index) => {
+      const name = key === 'original' ? 'Original' : (names[key] || key.toUpperCase());
+      const num = index + 1;
+      const title = `${name} (press ${num})`;
+      return `<button class="uiv-chip__seg" data-uiv-seg="${key}" role="radio" title="${title}">` +
+             `<span class="uiv-chip__num">${num}</span>` +
+             `<span class="uiv-chip__name">${name}</span>` +
+             `</button>`;
+    };
     chip.innerHTML = `
       <span class="uiv-chip__label">${id}</span>
-      <button class="uiv-chip__seg" data-uiv-seg="original" role="radio" title="Original">O</button>
-      <button class="uiv-chip__seg" data-uiv-seg="a" role="radio" title="${names.a}">A</button>
-      <button class="uiv-chip__seg" data-uiv-seg="b" role="radio" title="${names.b}">B</button>
-      <button class="uiv-chip__seg" data-uiv-seg="c" role="radio" title="${names.c}">C</button>
+      ${order.map(segButton).join('')}
       <span class="uiv-chip__badge">PREVIEW</span>
       <button class="uiv-chip__close" aria-label="Hide">×</button>
     `;
 
+    const scrollToSection = () => {
+      const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      section.scrollIntoView({ behavior, block: 'start' });
+    };
     chip.querySelectorAll('[data-uiv-seg]').forEach(el => {
       el.addEventListener('click', () => apply(el.dataset.uivSeg));
+      el.addEventListener('mouseenter', scrollToSection);
+      el.addEventListener('focus', scrollToSection);
     });
     chip.querySelector('.uiv-chip__close').addEventListener('click', () => {
       chip.remove();
@@ -63,15 +95,14 @@
     });
 
     chip.addEventListener('keydown', e => {
-      const segs = ['original', 'a', 'b', 'c'];
       const current = [...chip.querySelectorAll('[data-uiv-seg]')]
         .find(el => el.getAttribute('aria-checked') === 'true');
-      const idx = segs.indexOf(current ? current.dataset.uivSeg : 'original');
+      const idx = order.indexOf(current ? current.dataset.uivSeg : 'original');
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        apply(segs[(idx + 1) % segs.length]);
+        apply(order[(idx + 1) % order.length]);
         e.preventDefault();
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        apply(segs[(idx - 1 + segs.length) % segs.length]);
+        apply(order[(idx - 1 + order.length) % order.length]);
         e.preventDefault();
       }
     });
@@ -80,17 +111,63 @@
       document.body.appendChild(chip);
     }
 
-    let saved = 'original';
-    try { saved = localStorage.getItem(storageKey) || 'original'; } catch {}
-    apply(saved);
+    const ctx = { id, section, chip, order, apply, currentKey: 'original' };
+    ctxById[id] = ctx;
+
+    // Resolve initial key: URL > localStorage > 'original'.
+    let initial = readFromURL(id);
+    if (!initial) {
+      try { initial = localStorage.getItem(storageKey) || 'original'; } catch { initial = 'original'; }
+    }
+    apply(initial);
   });
 
+  // Scrollspy: mark the chip whose section is most visible as active.
+  // Falls back to first section when nothing intersects (e.g. very tall viewport above all sections).
+  if ('IntersectionObserver' in window) {
+    const ratios = new Map();
+    const setActive = id => {
+      if (id === activeId) return;
+      activeId = id;
+      document.querySelectorAll('.uiv-chip').forEach(c => {
+        c.classList.toggle('uiv-chip--active', c.dataset.uivChipFor === id);
+      });
+    };
+    const observer = new IntersectionObserver(entries => {
+      for (const e of entries) ratios.set(e.target.dataset.uivSection, e.intersectionRatio);
+      let topId = null, topRatio = 0;
+      ratios.forEach((r, id) => { if (r > topRatio) { topRatio = r; topId = id; } });
+      if (topId) setActive(topId);
+    }, { threshold: [0, 0.15, 0.35, 0.6, 0.85, 1] });
+    sections.forEach(s => observer.observe(s));
+    // Seed first section as active until the observer fires.
+    setActive(sections[0].dataset.uivSection);
+  }
+
+  // Global shortcuts.
   window.addEventListener('keydown', e => {
-    if (e.key.toLowerCase() !== 'v' || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
     const t = e.target;
     if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
-    document.querySelectorAll('.uiv-chip').forEach(c => {
-      c.style.display = c.style.display === 'none' ? '' : 'none';
-    });
+    if (t && t.isContentEditable) return;
+
+    // V: toggle chip visibility for screenshots.
+    if (e.key.toLowerCase() === 'v') {
+      document.querySelectorAll('.uiv-chip').forEach(c => {
+        c.style.display = c.style.display === 'none' ? '' : 'none';
+      });
+      return;
+    }
+
+    // 1-9: select the Nth option on the scrollspy-active section.
+    // 1 = Original, 2 = first variant, 3 = second, etc.
+    if (/^[1-9]$/.test(e.key)) {
+      const ctx = ctxById[activeId] || ctxById[sections[0].dataset.uivSection];
+      if (!ctx) return;
+      const idx = parseInt(e.key, 10) - 1;
+      if (idx < 0 || idx >= ctx.order.length) return;
+      ctx.apply(ctx.order[idx]);
+      e.preventDefault();
+    }
   });
 })();

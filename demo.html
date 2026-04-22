@@ -185,7 +185,12 @@
     </div>
   </template>
 
-  <section class="features" id="features">
+  <section
+    class="features"
+    id="features"
+    data-uiv-section="features"
+    data-uiv-names='{"a":"Bento Dispatch","b":"Neon Dossier"}'
+  >
     <h2 class="section-title">Small tool, strong opinions.</h2>
     <div class="features__grid">
       <article class="feature">
@@ -206,6 +211,146 @@
       </article>
     </div>
   </section>
+
+  <template data-uiv-for="features" data-uiv-variant="a">
+    <div class="fva">
+      <header class="fva__masthead">
+        <span class="fva__kicker">&sect; 02 &mdash; Dispatch</span>
+        <h2 class="fva__title">
+          Small tool,<br />
+          <em>strong</em> opinions.
+        </h2>
+        <span class="fva__folio">Drift Field Notes &mdash; No. 014</span>
+      </header>
+      <hr class="fva__rule" />
+      <div class="fva__bento">
+        <article class="fva__tile fva__tile--hero">
+          <span class="fva__num" aria-hidden="true">01</span>
+          <span class="fva__tag">Signal</span>
+          <h3 class="fva__h">Site &amp; app blocking</h3>
+          <p class="fva__p">
+            One click silences the parts of the internet that steal your morning.
+            No allow-list theater. The noise just <em>goes away</em>.
+          </p>
+          <span class="fva__stamp" aria-hidden="true">
+            <span>MODE</span>
+            <strong>DEEP</strong>
+          </span>
+        </article>
+        <article class="fva__tile fva__tile--b">
+          <span class="fva__num fva__num--sm" aria-hidden="true">02</span>
+          <h3 class="fva__h fva__h--sm">Session journal</h3>
+          <p class="fva__p fva__p--sm">
+            A line of context per session, so you remember what you were doing.
+          </p>
+        </article>
+        <article class="fva__tile fva__tile--c">
+          <span class="fva__num fva__num--sm" aria-hidden="true">03</span>
+          <h3 class="fva__h fva__h--sm">Menu-bar only</h3>
+          <p class="fva__p fva__p--sm">
+            No dock icon, no window. Just a number quietly counting down.
+          </p>
+        </article>
+        <article class="fva__tile fva__tile--d">
+          <span class="fva__num fva__num--sm" aria-hidden="true">04</span>
+          <h3 class="fva__h fva__h--sm">Local-first</h3>
+          <p class="fva__p fva__p--sm">
+            Your sessions stay on your machine. Sync is opt-in and end-to-end encrypted.
+          </p>
+          <span class="fva__ribbon" aria-hidden="true">E2E</span>
+        </article>
+      </div>
+      <hr class="fva__rule fva__rule--thin" />
+      <p class="fva__foot" aria-hidden="true">
+        <span>Filed under</span>
+        <span>focus · silence · fewer tabs</span>
+        <span class="fva__foot-num">pp. 14&ndash;17</span>
+      </p>
+    </div>
+  </template>
+
+  <template data-uiv-for="features" data-uiv-variant="b">
+    <div class="fvb">
+      <div class="fvb__grain" aria-hidden="true"></div>
+      <header class="fvb__head">
+        <div class="fvb__coord" aria-hidden="true">
+          <span class="fvb__dot"></span>
+          <span>DRIFT / DOSSIER</span>
+          <span class="fvb__sep">//</span>
+          <span>40.7128&deg; N &middot; 74.0060&deg; W</span>
+          <span class="fvb__sep">//</span>
+          <span class="fvb__clock" data-fvb-clock>--:--:-- UTC</span>
+        </div>
+        <h2 class="fvb__title">
+          Small tool,
+          <span class="fvb__title-accent">strong</span>
+          opinions.
+        </h2>
+        <p class="fvb__lede">Four commitments. No settings page.</p>
+      </header>
+      <ol class="fvb__rows">
+        <li class="fvb__row">
+          <span class="fvb__num" aria-hidden="true">01</span>
+          <div class="fvb__body">
+            <h3 class="fvb__h">Site &amp; app blocking</h3>
+            <p class="fvb__p">One click silences the parts of the internet that steal your morning.</p>
+            <div class="fvb__ticker" aria-hidden="true">
+              <div class="fvb__ticker-track">
+                <span>X.COM</span><span>·</span><span>YOUTUBE</span><span>·</span><span>REDDIT</span><span>·</span><span>HN</span><span>·</span><span>SLACK</span><span>·</span><span>MAIL</span><span>·</span><span>X.COM</span><span>·</span><span>YOUTUBE</span><span>·</span><span>REDDIT</span><span>·</span><span>HN</span><span>·</span><span>SLACK</span><span>·</span><span>MAIL</span><span>·</span>
+              </div>
+            </div>
+          </div>
+          <span class="fvb__tag" aria-hidden="true">// silence</span>
+        </li>
+        <li class="fvb__row">
+          <span class="fvb__num" aria-hidden="true">02</span>
+          <div class="fvb__body">
+            <h3 class="fvb__h">Session journal</h3>
+            <p class="fvb__p">A line of context per session, so you remember what you were doing.</p>
+            <div class="fvb__ticker fvb__ticker--alt" aria-hidden="true">
+              <div class="fvb__ticker-track">
+                <span>&ldquo;reply to Noor&rdquo;</span><span>·</span><span>&ldquo;draft Q2 memo&rdquo;</span><span>·</span><span>&ldquo;ship migration&rdquo;</span><span>·</span><span>&ldquo;rewrite hero&rdquo;</span><span>·</span><span>&ldquo;reply to Noor&rdquo;</span><span>·</span><span>&ldquo;draft Q2 memo&rdquo;</span><span>·</span><span>&ldquo;ship migration&rdquo;</span><span>·</span><span>&ldquo;rewrite hero&rdquo;</span><span>·</span>
+              </div>
+            </div>
+          </div>
+          <span class="fvb__tag" aria-hidden="true">// memory</span>
+        </li>
+        <li class="fvb__row">
+          <span class="fvb__num" aria-hidden="true">03</span>
+          <div class="fvb__body">
+            <h3 class="fvb__h">Menu-bar only</h3>
+            <p class="fvb__p">No dock icon, no window. Just a number quietly counting down.</p>
+            <div class="fvb__ticker" aria-hidden="true">
+              <div class="fvb__ticker-track">
+                <span>25:00</span><span>·</span><span>24:59</span><span>·</span><span>24:58</span><span>·</span><span>24:57</span><span>·</span><span>24:56</span><span>·</span><span>24:55</span><span>·</span><span>25:00</span><span>·</span><span>24:59</span><span>·</span><span>24:58</span><span>·</span><span>24:57</span><span>·</span><span>24:56</span><span>·</span><span>24:55</span><span>·</span>
+              </div>
+            </div>
+          </div>
+          <span class="fvb__tag" aria-hidden="true">// restraint</span>
+        </li>
+        <li class="fvb__row">
+          <span class="fvb__num" aria-hidden="true">04</span>
+          <div class="fvb__body">
+            <h3 class="fvb__h">Local-first</h3>
+            <p class="fvb__p">Your sessions stay on your machine. Sync is opt-in and end-to-end encrypted.</p>
+            <div class="fvb__ticker fvb__ticker--alt" aria-hidden="true">
+              <div class="fvb__ticker-track">
+                <span>~/drift/sessions</span><span>·</span><span>E2E</span><span>·</span><span>NO CLOUD</span><span>·</span><span>NO ACCOUNT</span><span>·</span><span>~/drift/sessions</span><span>·</span><span>E2E</span><span>·</span><span>NO CLOUD</span><span>·</span><span>NO ACCOUNT</span><span>·</span>
+              </div>
+            </div>
+          </div>
+          <span class="fvb__tag" aria-hidden="true">// sovereignty</span>
+        </li>
+      </ol>
+      <aside class="fvb__side" aria-hidden="true">
+        <span>N&ordm;</span>
+        <span>01</span>
+        <span>02</span>
+        <span>03</span>
+        <span>04</span>
+      </aside>
+    </div>
+  </template>
 
   <section
     class="testimonial"
@@ -285,5 +430,17 @@
   </footer>
 
   <script src="ui-variants.js"></script>
+  <script>
+    // Live UTC clock for Variant B. Ticks once a second; updates any mounted element.
+    (() => {
+      const pad = n => String(n).padStart(2, '0');
+      setInterval(() => {
+        const el = document.querySelector('[data-fvb-clock]');
+        if (!el) return;
+        const d = new Date();
+        el.textContent = `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`;
+      }, 1000);
+    })();
+  </script>
 </body>
 </html>
