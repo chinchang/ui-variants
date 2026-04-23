@@ -111,13 +111,15 @@ If a variant exhibits 2 or more of these, rework it before finalizing.
 
 ## 8. Variant-selection tactics (combine with `variant-playbook.md`)
 
-When picking 3 directions, deliberately vary on the **polish axes** too, not just the aesthetic ones:
+When picking N directions (2, 3, or 4), deliberately vary on the **polish axes** too, not just the aesthetic ones. The three polish archetypes below are what to draw from — pick N of them, not the same one twice:
 
-- One variant leads with **depth** (layered shadows, overlapping elements, gradient meshes).
-- One leads with **typographic restraint** (oversized type, generous whitespace, 1-color palette).
-- One leads with **color commitment** (saturated hero color, colored grays, strong accent).
+- **Depth-led** — layered shadows, overlapping elements, gradient meshes, z-axis stacking.
+- **Typographic-restraint-led** — oversized type, generous whitespace, 1–2-color palette, ornament-through-type.
+- **Color-committed** — saturated hero color, colored grays, strong accent, confident clashing.
 
-This ensures the three variants demonstrate different *kinds* of design thinking, not just different moods.
+For 2 variants, pick TWO of these three — and make sure the two you pick are as far apart as possible (depth-led + typographic-restraint-led is a stronger contrast than depth-led + color-committed, since the latter can both end up maximalist). For 3+ variants, use all three.
+
+This ensures your variants demonstrate different *kinds* of design thinking, not just different moods.
 
 ---
 

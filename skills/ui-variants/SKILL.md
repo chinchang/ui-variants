@@ -52,26 +52,30 @@ Use `AskUserQuestion` to collect these concisely when multiple are missing.
 - Detect framework and styling approach: Tailwind, CSS Modules, styled-components, plain CSS, CSS-in-JS, etc.
 - List every prop, state value, handler, and external data dependency the section touches. Variants must preserve all of these unless the user chose "restructure."
 
-### Step 2 — Pick 3 distinct aesthetic directions
+### Step 2 — Pick N distinct aesthetic directions
 
 **Load all three references before choosing:**
-- `references/variant-playbook.md` — aesthetic archetypes and role-specific starting points
+- `references/variant-playbook.md` — content-first framing, differentiation axes, decomposition references, hybridization rules
 - `references/design-principles.md` — baseline polish + accessibility rules; the **anti-AI-slop checklist**
 - `references/signature-moves.md` — **the Boldness Quota.** Concrete award-site-level signature moves, required per variant, plus a curated font library and set-level diversity requirements
 
 The goal is output that looks like a professional, daring designer made it — the kind of work that wins at design awards shows. Polished-but-safe is the failure mode. Commit to unusual moves.
 
+**Start from the content, not from a style menu.** Before consulting the decomposition references, read what this section is actually SAYING. Is the copy confessional or authoritative, playful or technical, spare or dense? Whose voice is it in? Who is it for? What does the surrounding brand establish? What feels contemporary in design right now vs. played-out? The directions should emerge from those signals. Only AFTER forming an instinct from the content should you consult `variant-playbook.md` — and even then, use it as a list of patterns to cannibalize and hybridize, never as a menu to pick three items off. See `variant-playbook.md`'s "Start from the content, not from a style menu" section.
+
 Core rules:
 
-- The three directions must be **meaningfully different from each other AND from the original**, not three flavors of the same idea.
-- **Every variant must clear the Boldness Quota from `signature-moves.md`** (≥3 signature moves per variant, drawn from different categories, with at least one composition move and one typography move).
-- **The set of three collectively must include**: one dark variant, one typography-led variant, one motion-heavy variant, at least one saturated/acid accent, and three different font pairings. See the set-level checklist in `signature-moves.md`.
+- The N directions (2, 3, or 4 — whatever the user asked for) must be **meaningfully different from each other AND from the original**, not N flavors of the same idea.
+- **Every variant must clear the Boldness Quota from `signature-moves.md`** (≥3 signature moves per variant, drawn from different categories, with at least one composition move and one typography move, and the third preferably from Motion / Texture / Interaction).
+- **Set-level diversity scales with count** — see `signature-moves.md`'s "Set-level diversity" section for the exact required boxes at each variant count. Non-negotiable boxes for ≥2 variants: at least one dark variant, at least one saturated/acid accent somewhere, distinct font pairings per variant. For ≥3 variants, also require one typography-led and one motion-heavy variant. For ≥4, also require a brutalist/raw variant. **Most common failure mode: user asks for 2 variants, model silently drops set-level rules because they read like they're written for 3. Don't do that.**
+- **At least one variant MUST hit the minimum-scale floor**: display-type element ≥144px on desktop, not clamping below 96px on mobile. Polite responsive downscaling is how bold variants get accidentally tamed at the breakpoint boundary.
 - Vary on **polish axes** too: one variant leads with depth (layered shadows, overlap), one with typographic restraint, one with color commitment.
 - Pick **characterful fonts** from the curated list in `signature-moves.md`. Inter / Roboto / system-ui as the only font is forbidden — it's the #1 AI tell.
 - Apply the core design rules: colored grays (never pure `#888`), dark-gray on off-white (never `#000` on `#fff`), offset multi-layer shadows (never symmetric glows), hierarchy through weight + color (not just size), hue-rotate-to-brighten, non-linear spacing scales.
-- **Name each direction explicitly** with words that convey the boldness (e.g., "Acid Editorial", "Kinetic Marquee", "Midnight Lookbook"). Avoid generic names like "Modern Clean" or "Variant A".
+- **Name each direction explicitly** with words that convey what's distinctive about THIS execution on THIS content. Good: "Acid Dispatch", "Kinetic Marquee", "Midnight Marginalia". Bad: "Editorial Serif", "Brutalist Grid", "Neo-Retro Terminal" — these are archetype names, and naming a variant after the archetype it borrowed from is a confession that you picked a style off the shelf. Hybrid names that don't fit any single archetype are the sign of real design thinking.
+- **No archetype repetition across the project.** If another section of this project already has a variant in a given aesthetic family (e.g., the hero has a "Midnight Terminal" and the testimonial has a "Dev Log Terminal"), the next section should NOT add another variant in that family. Variety across the project matters as much as variety within each set. Check existing variant templates/components before committing to directions.
 
-### Step 3 — Generate the 3 variant implementations
+### Step 3 — Generate the variant implementations
 
 Create each variant as a sibling file next to the original. Naming convention:
 
@@ -91,6 +95,10 @@ Each variant must:
 - Load any external fonts via `@import` or `<link>` at the top of the variant's CSS/JSX. Prefer Google Fonts for commercial-safe drop-ins; note the license if using a premium foundry.
 
 **Do not modify the original** — it must remain byte-identical so "Original" in the toggle really is the original.
+
+**Mid-Step-3 anti-dilution gut-check.** Once your first draft of a variant compiles and renders correctly, pause and ask: *do I see an awwwards-quality page, or a polished-but-safe page?* The pull toward dilution is strong — when the CSS "works" there's a temptation to soften the unusual moves (reduce the 280px numeral to 80px to "fit better", mute the acid accent to a tasteful orange, add whitespace so nothing feels aggressive). **Resist.** Read the direction name you committed to in Step 2; if the rendered result doesn't live up to that name, the first draft was too safe. Re-read `references/signature-moves.md` and push the signature moves harder.
+
+**End-of-Step-3: signature-moves tally (required output in your response to the user).** Before calling the variant set done, print the tally block exactly as specified in `references/signature-moves.md` under "Boldness checklist" — one entry per variant, listing the Composition move, the Typography move + font, the extra (Motion / Texture / Interaction) move, the font pairing, and the accent color. This is an enforcement step: if you cannot fill every slot for a variant, the Boldness Quota has not been cleared and that variant needs rework. Do not skip the tally — it's the one line of defense against convergence-to-safe.
 
 ### Step 4 — Inject the variant switcher (dev-only)
 
@@ -283,6 +291,7 @@ Confirm the original section file was not touched. Report files deleted and any 
 - **Variants must not break page layout around them.** Test scroll, sticky siblings, and responsive breakpoints after injection.
 - **Do not invent new content.** Keep headings, copy, and CTAs intact unless the user opted into restructure.
 - **Design bar is non-negotiable.** Every variant must clear (a) the Boldness Quota in `references/signature-moves.md` AND (b) the anti-AI-slop + pre-ship checklists in `references/design-principles.md`. Variants that look like generic AI output (pure black/white, untinted grays, symmetric glow shadows, purple-pink gradients, centered paragraphs) are failures. Variants that are polished-but-safe (technically correct, zero signature moves, convergent defaults) are ALSO failures. The skill exists to produce award-quality design exploration, not more safe variants.
+- **Content first, archetypes second.** The directions must emerge from the section's actual content + brand + moment, not from picking N items off the archetype menu in `variant-playbook.md`. Archetypes are patterns to decompose and hybridize, not recipes. A master designer doesn't walk into a brief with a pre-selected palette; don't either. If a teammate reviewed the set and could label every variant with a single archetype name ("that one's the editorial, that one's the brutalist"), the set is pastiche.
 - **Accessibility is non-negotiable.** WCAG contrast, visible focus rings, semantic HTML, `prefers-reduced-motion` — apply on every variant.
 - **Prefer the references.** Don't reinvent the toggle — pull from `references/toggle-ui.md` verbatim and adjust only the integration glue.
 - **Diff-and-confirm before destructive ops.** The `promote` and `reject` sub-commands delete files and rewrite CSS — they are irreversible without git. Always run discovery → print the per-file plan → wait for explicit user confirmation → then edit. Never skip the confirmation step to "move faster."

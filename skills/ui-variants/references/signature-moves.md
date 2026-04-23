@@ -10,21 +10,28 @@ Award-winning design sites do something different: they **commit to unusual move
 
 ## The Boldness Quota (hard requirement)
 
-Every single variant (A, B, C) MUST include **at least 3 signature moves** drawn from different categories below. Counting:
+Every single variant — regardless of how many the user asked for — MUST include **at least 3 signature moves** drawn from different categories below. Counting:
 
 - 1 move from **Composition** is required (minimum)
 - 1 move from **Typography** is required (minimum)
-- 1 additional move from Composition / Motion / Texture / Interaction
+- 1 additional move from **Motion / Texture / Interaction** (preferred — this is the "weird on purpose" category that keeps variants from being just bold type on a neat layout). A second Composition or Typography move also counts if the extra move is substantial; but if all three moves are Composition + Typography, you are probably on the "editorial but safe" path — consider reaching into Motion / Texture / Interaction for the third.
 
-**Across the three variants, you must cover:**
+### Minimum-scale floor (per set)
 
-- [ ] At least **one dark-mode** variant (dark/saturated background, not just a dim light theme)
-- [ ] At least **one typography-led** variant (no imagery or media, the type IS the art)
-- [ ] At least **one motion-heavy** variant (≥2 motion signature moves that aren't just a spin or fade)
-- [ ] At least **one saturated/acid** accent (pure lime, electric blue, hot magenta, safety orange — not muted brand orange)
-- [ ] **Three different font pairings** (no two variants use the same fonts)
+**At least one variant in the set MUST have a display-type element ≥144px on desktop that doesn't clamp below 96px on mobile.** Polite responsive downscaling like `clamp(40px, 6vw, 96px)` is the #1 way bold variants get accidentally tamed at the breakpoint boundary. If every variant's largest text clamps below 96px on mobile, you've softened the set.
 
-If the three variants collectively fail any of these boxes, rework before moving on. "Safe but polished" is the failure mode this file exists to prevent.
+### Set-level diversity (scales with variant count)
+
+**Across the set, collectively cover these boxes. The number you must hit scales with how many variants you're generating:**
+
+- [ ] **At least one dark variant** (dark/saturated background, not just a dim light theme) — required for 2+ variants
+- [ ] **At least one saturated/acid accent** somewhere in the set (pure lime, electric blue, hot magenta, safety orange, volt yellow — not muted brand orange) — required for 2+ variants
+- [ ] **Distinct font pairings** (no two variants share the same fonts) — required for 2+ variants
+- [ ] **At least one typography-led** variant (no imagery or media, the type IS the art) — required for 3+ variants
+- [ ] **At least one motion-heavy** variant (≥2 motion signature moves that aren't just a spin or fade) — required for 3+ variants
+- [ ] **At least one brutalist/raw or festival-poster variant** (intentional ugliness, monospace-heavy, dense layered type, rotated labels) — required for 4+ variants
+
+For 2 variants the first three boxes are non-negotiable. For 3+ variants all five (or all six, at 4+) are. If the set collectively fails any required box for its count, rework before moving on. **"Safe but polished" is the failure mode this file exists to prevent**, and the single most common way it happens is when someone asks for 2 variants and the model silently drops set-level enforcement because the rules read like they're written for 3.
 
 ---
 
@@ -116,7 +123,7 @@ All motion MUST be wrapped in `@media (prefers-reduced-motion: no-preference)` o
 
 - **Distinctive + neutral**: pair ONE characterful face (display) with a neutral workhorse (body). Never two characterful faces fighting.
 - **Mono + serif**: a classic award-site combo. Try it for at least one variant.
-- **Weird + weird allowed once**: one of your three variants may pair two characterful faces if executed intentionally (e.g., Honk + Space Mono).
+- **Weird + weird allowed once per set**: one variant may pair two characterful faces if executed intentionally (e.g., Honk + Space Mono). Never more than one — the rest of the set keeps the distinctive + neutral pairing rule.
 - **Never use Inter as the only font** with no display pairing. That's the generic-AI baseline.
 
 ---
@@ -167,20 +174,41 @@ When writing a variant, if you find yourself defaulting to any of these, STOP an
 
 ## Boldness checklist (run before Step 6 verification, per variant)
 
-For each variant, count signature moves:
+For each variant, count signature moves and print the list in your response to the user:
 
-- [ ] ≥1 composition move from category 1
-- [ ] ≥1 typography move from category 2 (and using a characterful font, not Inter/Roboto/system)
-- [ ] ≥1 additional move from category 3 / 4 / 5
+- [ ] ≥1 composition move from category 1 (name it)
+- [ ] ≥1 typography move from category 2 — with a characterful font, not Inter/Roboto/system (name the font)
+- [ ] ≥1 additional move, preferably from category 3 / 4 / 5 (name it)
+- [ ] Largest display-type element hits the minimum-scale floor if this variant is the one carrying it for the set
 - [ ] Passes all `design-principles.md` polish rules
 - [ ] Meets WCAG 4.5:1 contrast despite the boldness
 
-And across the set:
+Expected output shape at the end of Step 3 (enforce this — don't skip):
 
-- [ ] Dark variant present
-- [ ] Typography-led variant present
-- [ ] Motion-heavy variant present
-- [ ] Saturated/acid accent appears at least once
-- [ ] Three different font pairings
+```
+## Signature moves tally
+
+Variant A — <direction name>
+  Composition  · <move>  (e.g. "oversized backdrop numerals at 260px")
+  Typography   · <move>  (e.g. "Fraunces 900 italic with opsz 144")
+  Extra        · <move>  (e.g. "offset magenta shadow 6px 6px 0")
+  Font pairing · <face> + <face>
+  Accent       · <hex>
+
+Variant B — <direction name>
+  …
+```
+
+If you can't fill out all slots for a variant, its boldness quota is not cleared — rework before finalizing.
+
+And across the set (required boxes depend on variant count — see the set-level diversity section above):
+
+- [ ] Dark variant present (required ≥2 variants)
+- [ ] Saturated/acid accent appears at least once (required ≥2 variants)
+- [ ] Distinct font pairings — no two variants share fonts (required ≥2 variants)
+- [ ] Typography-led variant present (required ≥3 variants)
+- [ ] Motion-heavy variant present (required ≥3 variants)
+- [ ] Brutalist/raw or festival-poster variant present (required ≥4 variants)
+- [ ] Minimum-scale floor cleared by at least one variant in the set
 
 If either checklist fails, rework. Safe variants fail this skill's promise.
