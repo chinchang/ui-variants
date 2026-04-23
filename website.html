@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Later — premium procrastination</title>
+  <style>
+    :root {
+      --bg: #f7f7f4;
+      --ink: #17171a;
+      --ink-2: #3b3b43;
+      --muted: #7a7a85;
+      --rule: #e4e4df;
+      --card: #ffffff;
+      --accent: #2a4ff0;
+      --accent-soft: #e7ebff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    /* ---------- Nav ---------- */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--rule);
+      position: sticky;
+      top: 0;
+      background: rgba(247, 247, 244, 0.92);
+      backdrop-filter: blur(10px);
+      z-index: 50;
+    }
+    .nav__logo {
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+      text-decoration: none;
+    }
+    .nav__logo::after {
+      content: ".";
+      color: var(--accent);
+    }
+    .nav__links {
+      display: flex;
+      gap: 28px;
+      font-size: 14px;
+    }
+    .nav__links a {
+      text-decoration: none;
+      color: var(--muted);
+      transition: color 150ms;
+    }
+    .nav__links a:hover { color: var(--ink); }
+    .nav__cta {
+      padding: 9px 18px;
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 72px;
+      align-items: center;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 88px 40px 104px;
+    }
+    .hero__eyebrow {
+      margin: 0 0 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+    .hero__title {
+      margin: 0 0 24px;
+      font-size: clamp(44px, 6vw, 72px);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+    .hero__title em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .hero__lede {
+      max-width: 480px;
+      margin: 0 0 36px;
+      font-size: 18px;
+      line-height: 1.55;
+      color: var(--ink-2);
+    }
+    .hero__ctas { display: flex; gap: 12px; margin-bottom: 20px; }
+    .hero__meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 11px 20px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: transform 120ms, background 120ms, border-color 120ms;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn--primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn--primary:hover { background: #1e3ad0; }
+    .btn--ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--rule);
+    }
+    .btn--ghost:hover { border-color: var(--ink); }
+    .btn--lg { padding: 14px 26px; font-size: 16px; }
+
+    /* ---------- Hero visual: a task-card mockup ---------- */
+    .hero__visual {
+      position: relative;
+      justify-self: center;
+      width: 100%;
+      max-width: 380px;
+    }
+    .task-card {
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 1px 2px rgba(23,23,26,0.04), 0 10px 24px -10px rgba(23,23,26,0.12);
+    }
+    .task-card__label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+    .task-card__item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid var(--rule);
+      font-size: 14px;
+    }
+    .task-card__item:first-of-type { border-top: 0; }
+    .task-card__check {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid var(--rule);
+      flex-shrink: 0;
+    }
+    .task-card__text { flex: 1; color: var(--ink); }
+    .task-card__date {
+      font-size: 12px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .task-card__item--slipped { opacity: 0.35; }
+    .task-card__item--slipped .task-card__text { text-decoration: line-through; }
+    .task-card__footer {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .task-card__footer strong { color: var(--accent); font-weight: 600; }
+    .task-card__badge {
+      position: absolute;
+      right: -20px;
+      top: -16px;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      transform: rotate(4deg);
+      box-shadow: 0 6px 16px -4px rgba(23,23,26,0.25);
+    }
+
+    /* ---------- Features ---------- */
+    .features {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 72px 40px;
+      border-top: 1px solid var(--rule);
+    }
+    .section-title {
+      font-size: clamp(30px, 3.6vw, 40px);
+      letter-spacing: -0.02em;
+      margin: 0 0 48px;
+      font-weight: 700;
+      max-width: 22ch;
+    }
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 36px 56px;
+    }
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .feature p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    /* ---------- How it works ---------- */
+    .how {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 72px 40px;
+      border-top: 1px solid var(--rule);
+    }
+    .how__steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .how__step {
+      padding: 24px;
+      border: 1px solid var(--rule);
+      border-radius: 14px;
+      background: var(--card);
+    }
+    .how__num {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    .how__step h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .how__step p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    /* ---------- Pricing ---------- */
+    .pricing {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 72px 40px;
+      border-top: 1px solid var(--rule);
+    }
+    .pricing__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .plan {
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 14px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+    }
+    .plan--recommended {
+      border-color: var(--ink);
+      position: relative;
+    }
+    .plan--recommended::before {
+      content: "Most procrastinated";
+      position: absolute;
+      top: -11px;
+      left: 20px;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    .plan h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .plan__price {
+      margin: 8px 0 20px;
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .plan__price span {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 400;
+      margin-left: 4px;
+    }
+    .plan ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px;
+      flex: 1;
+    }
+    .plan ul li {
+      padding: 6px 0;
+      font-size: 14px;
+      color: var(--ink-2);
+      position: relative;
+      padding-left: 20px;
+    }
+    .plan ul li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+    .plan .btn { justify-content: center; }
+
+    /* ---------- Testimonial ---------- */
+    .testimonial {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 88px 40px;
+      text-align: center;
+    }
+    .testimonial blockquote {
+      margin: 0 0 20px;
+      font-size: clamp(22px, 2.6vw, 30px);
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      font-weight: 500;
+    }
+    .testimonial blockquote::before { content: "\201C"; margin-right: 2px; color: var(--muted); }
+    .testimonial blockquote::after  { content: "\201D"; margin-left: 2px;  color: var(--muted); }
+    .testimonial cite {
+      font-style: normal;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* ---------- CTA band ---------- */
+    .cta {
+      text-align: center;
+      padding: 96px 40px;
+      border-top: 1px solid var(--rule);
+      background: #eeeeea;
+    }
+    .cta h2 {
+      font-size: clamp(36px, 4.4vw, 52px);
+      letter-spacing: -0.03em;
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+    .cta p {
+      color: var(--muted);
+      margin: 0 0 32px;
+      font-size: 16px;
+    }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      padding: 28px 40px;
+      border-top: 1px solid var(--rule);
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .footer a {
+      text-decoration: none;
+      color: var(--muted);
+      margin: 0 6px;
+    }
+    .footer a:hover { color: var(--ink); }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 820px) {
+      .hero { grid-template-columns: 1fr; padding: 56px 24px 72px; gap: 40px; }
+      .hero__visual { order: -1; max-width: 320px; }
+      .nav { padding: 14px 20px; }
+      .nav__links { display: none; }
+      .features__grid { grid-template-columns: 1fr; gap: 24px; }
+      .how__steps { grid-template-columns: 1fr; }
+      .pricing__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <a class="nav__logo" href="#">Later</a>
+    <nav class="nav__links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#testimonials">Stories</a>
+    </nav>
+    <a class="nav__cta" href="#signup">Sign up (eventually)</a>
+  </header>
+
+  <section class="hero" id="hero">
+    <div class="hero__inner">
+      <p class="hero__eyebrow">Premium procrastination · Unlimited snoozes</p>
+      <h1 class="hero__title">
+        Start tomorrow.<br />
+        <em>Or don't.</em>
+      </h1>
+      <p class="hero__lede">
+        Later is the productivity app for people who've noticed that most things
+        sort themselves out if you wait long enough. Close your tabs. Put down
+        your planner. We'll handle it. Later.
+      </p>
+      <div class="hero__ctas">
+        <a class="btn btn--primary" href="#signup">Start putting things off</a>
+        <a class="btn btn--ghost" href="#how">See how it works →</a>
+      </div>
+      <p class="hero__meta">Free forever · $9/mo Pro · No urgency</p>
+    </div>
+    <div class="hero__visual" aria-hidden="true">
+      <div class="task-card">
+        <p class="task-card__label">Today · 3 tasks</p>
+        <div class="task-card__item">
+          <span class="task-card__check"></span>
+          <span class="task-card__text">Reply to Marco's email</span>
+          <span class="task-card__date">Next Tue</span>
+        </div>
+        <div class="task-card__item">
+          <span class="task-card__check"></span>
+          <span class="task-card__text">File Q2 expense report</span>
+          <span class="task-card__date">Next Fri</span>
+        </div>
+        <div class="task-card__item task-card__item--slipped">
+          <span class="task-card__check"></span>
+          <span class="task-card__text">Start gym routine</span>
+          <span class="task-card__date">Resolved</span>
+        </div>
+        <div class="task-card__footer">
+          <span>Avg. deferral: <strong>9.4 days</strong></span>
+          <span>Auto-snooze on</span>
+        </div>
+      </div>
+      <div class="task-card__badge">+ 47 snoozes today</div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <h2 class="section-title">Opinionated tools for the patiently unbothered.</h2>
+    <div class="features__grid">
+      <article class="feature">
+        <h3>Auto-Snooze</h3>
+        <p>Tasks silently slide into next week. And the week after. Until they're not tasks anymore — statistically, most of them weren't.</p>
+      </article>
+      <article class="feature">
+        <h3>Excuse Engine</h3>
+        <p>GPT-generated reasons you're not ready yet. "I was waiting for the full moon" now arrives in your colleague's inbox, plausibly.</p>
+      </article>
+      <article class="feature">
+        <h3>Future-Self Blame Router</h3>
+        <p>Emails Tomorrow-You about Today-You's failures. Keeps the guilt on schedule without interrupting your morning.</p>
+      </article>
+      <article class="feature">
+        <h3>Procrastination Score</h3>
+        <p>A leaderboard for how well you're avoiding things. Third place is the goal. Winners are trying too hard.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <h2 class="section-title">How it works — if you must know.</h2>
+    <ol class="how__steps">
+      <li class="how__step">
+        <span class="how__num">STEP 01</span>
+        <h3>Install Later.</h3>
+        <p>Or don't. We'll still be here next Tuesday. Statistically, so will your tasks.</p>
+      </li>
+      <li class="how__step">
+        <span class="how__num">STEP 02</span>
+        <h3>Add the thing you're avoiding.</h3>
+        <p>Later recognizes the shape of a task you'll never do. It knows the ones. It has friends.</p>
+      </li>
+      <li class="how__step">
+        <span class="how__num">STEP 03</span>
+        <h3>Close the app.</h3>
+        <p>Later handles the rest. Usually by not handling it. That's the feature, not a bug.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <h2 class="section-title">Plans for every level of commitment-phobia.</h2>
+    <div class="pricing__grid">
+      <article class="plan">
+        <h3>Casual</h3>
+        <p class="plan__price">$0<span>/ forever</span></p>
+        <ul>
+          <li>Unlimited snoozes</li>
+          <li>Basic excuses (10/mo)</li>
+          <li>Standard guilt</li>
+          <li>Community leaderboard</li>
+        </ul>
+        <a class="btn btn--ghost" href="#signup">Start — later</a>
+      </article>
+      <article class="plan plan--recommended">
+        <h3>Pro</h3>
+        <p class="plan__price">$9<span>/ month</span></p>
+        <ul>
+          <li>Unlimited AI excuses</li>
+          <li>Future-Self Blame Router</li>
+          <li>Priority deferral queue</li>
+          <li>Weekly regret digest</li>
+          <li>Private leaderboard</li>
+        </ul>
+        <a class="btn btn--primary" href="#signup">Go Pro</a>
+      </article>
+      <article class="plan">
+        <h3>Executive</h3>
+        <p class="plan__price">$49<span>/ month</span></p>
+        <ul>
+          <li>Everything in Pro</li>
+          <li>Delegate blame to teammates</li>
+          <li>White-glove procrastination</li>
+          <li>Quarterly non-progress review</li>
+          <li>Direct line to our therapist</li>
+        </ul>
+        <a class="btn btn--ghost" href="#signup">Contact us (eventually)</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="testimonial" id="testimonials">
+    <blockquote>
+      I've been meaning to write this testimonial for six months. Later helped
+      me realize I didn't have to.
+    </blockquote>
+    <cite>— Marco D., still on the free plan</cite>
+  </section>
+
+  <section class="cta" id="signup">
+    <h2>Still reading?</h2>
+    <p>You could just sign up. No pressure. We'll be here.</p>
+    <a class="btn btn--primary btn--lg" href="#">Start putting things off →</a>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 Later Inc. · Incorporated last Tuesday, probably · <a href="#">Privacy</a> · <a href="#">Terms (TBD)</a> · <a href="#">Careers (filled tomorrow)</a></p>
+  </footer>
+</body>
+</html>
